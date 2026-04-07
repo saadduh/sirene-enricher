@@ -1,96 +1,101 @@
-🚀 SIRENE Enricher v7.0
-SIRENE Enricher is a high-performance Python tool designed to automate the enrichment of business datasets using the official INSEE SIRENE API.
+# 🚀 SIRENE Enricher v7.0
+
+SIRENE Enricher is a high-performance Python tool designed to automate the enrichment of business datasets using the official **INSEE SIRENE API**. 
 
 Whether you have a list of SIRET numbers in an Excel file that needs addresses, employee counts, or legal status, this tool handles the heavy lifting with a modern Desktop GUI and a robust Headless CLI mode.
 
-✨ Key Features
-Dual Interface: Use the intuitive Tkinter Desktop GUI or the Headless CLI for automated workflows.
+---
 
-High Performance: Multi-threaded processing (SIRENEWorker) ensures fast data fetching without freezing the interface.
+## ✨ Key Features
 
-Smart Resilience: 
+* **Dual Interface**: Use the intuitive **Tkinter Desktop GUI** or the **Headless CLI** for automated workflows.
+* **High Performance**: Multi-threaded processing (`SIRENEWorker`) ensures fast data fetching without freezing the interface.
+* **Smart Resilience**:
+    * **Auto-Checkpointing**: If the process is interrupted, it saves progress automatically. Resume exactly where you left off.
+    * **Intelligent Retries**: Built-in handling for rate limits (HTTP 429) and network timeouts.
+* **Advanced Data Cleaning**: Automatically maps obscure INSEE codes to human-readable labels (e.g., NAF codes, legal categories, and employee size brackets).
+* **Global Caching**: Maintains a local cache (`.sirene_cache`) to avoid redundant API calls for previously enriched SIRETs.
+* **Data Visualization**: Real-time stats and charts showing activity sectors (NAF) and regional distribution of your data.
 
-- Auto-Checkpointing: If the process is interrupted, it saves progress automatically. Resume exactly where you left off.
+---
 
-- Intelligent Retries: Built-in handling for rate limits (HTTP 429) and network timeouts.
+## 🛠️ Installation
 
-Advanced Data Cleaning: Automatically maps obscure INSEE codes to human-readable labels (e.g., NAF codes, legal categories, and employee size brackets).
+### 1. Prerequisites
+* **Python 3.8+**
+* **INSEE API Key**: Obtain your free key from the [Insee Developer Portal](https://portail-api.insee.fr/).
 
-Global Caching: Maintains a local cache (.sirene_cache) to avoid redundant API calls for previously enriched SIRETs.
-
-Data Visualization: Real-time stats and charts showing activity sectors (NAF) and regional distribution of your data.
-
-🛠️ Installation
-1. Prerequisites
-Python 3.8+
-
-INSEE API Key: Obtain your free key from the Insee Developer Portal.
-
-2. Setup
+### 2. Setup
 Clone the repository and install the required libraries:
 
-Bash
-git clone https://github.com/YOUR_USERNAME/sirene-enricher.git
+```bash
+git clone [https://github.com/YOUR_USERNAME/sirene-enricher.git](https://github.com/YOUR_USERNAME/sirene-enricher.git)
 cd sirene-enricher
 pip install requests pandas openpyxl Pillow matplotlib
-🚀 How to Use
-Desktop Version (GUI)
+```
+
+---
+
+## 🛠 How to Use
+
+### 💻 Desktop Version (GUI)
 Simply run the script to launch the interface:
 
-Bash
+```bash
 python main.py
-Paste your INSEE API Key.
+```
 
-Select your Excel File (ensure it contains a column named SIRET).
+1.  **Paste** your INSEE API Key.
+2.  **Select** your Excel File (ensure it contains a column named `SIRET`).
+3.  **Click** `Start Enrichment`.
 
-Click Start Enrichment.
+### ⚙️ Command Line Version (Headless)
+Perfect for server environments or large-scale automation:
 
-Command Line Version (Headless)
-For server environments or automation:
-
-Bash
+```bash
 python main.py --headless --file data.xlsx --key YOUR_API_KEY --output enriched_results
-Additional CLI Arguments:
+```
 
---delay: Seconds between requests (default: 2.0).
+#### 💡 Additional CLI Arguments
+| Argument | Description | Default |
+| :--- | :--- | :--- |
+| `--delay` | Seconds between requests to avoid rate limits | `2.0` |
+| `--batch-size` | Split output into smaller files (e.g., 50 rows/file) | `None` |
+| `--col` | Change the target column name | `SIRET` |
 
---batch-size: Split output into smaller files (e.g., 50 rows per file).
+---
 
---col: Change the target column name (default: "SIRET").
+## 📊 Data Enriched
+The tool automatically appends the following verified information to your Excel file:
 
-📊 Data Enriched
-The tool adds the following information to your Excel file:
+* **Denomination:** Official legal company name.
+* **Legal Status:** Human-readable company type (SAS, SARL, etc.).
+* **Workforce:** Employee range (e.g., "50 to 99 employees").
+* **Activity:** NAF code and full category description.
+* **Full Address:** Number, street, city, postal code, and region.
+* **IDCC:** Collective agreement identifier (IDCC code).
 
-Denomination: Company name.
+---
 
-Legal Status: Human-readable company type (SAS, SARL, etc.).
+## 📁 Project Structure
+```text
+├── main.py             # Core application engine and GUI logic
+├── setup.iss           # Configuration for the Inno Setup installer
+├── .sirene_cache/      # Auto-generated session checkpoints & global cache
+└── README.md           # Project documentation
+```
 
-Workforce: Employee range (e.g., "50 to 99 employees").
+---
 
-Activity: NAF code and full description.
+## 📝 License
+Distributed under the **MIT License**. See `LICENSE` for more information.
 
-Full Address: Number, street, city, postal code, and region.
+---
 
-IDCC: Collective agreement identifier (optional).
+## 👨‍💻 Author
+**Saad Janina**
+*Data Analyst & Digital Transformation Specialist*
 
-📁 Project Structure
-main.py: The core application engine.
-
-setup.iss: Configuration for the Inno Setup installer.
-
-.sirene_cache/: Stores your session checkpoints and global cache (created on first run).
-
-README.md: Project documentation.
-
-⚙️ Configuration for Developers
-If you are modifying the code, note the following thread-safe implementations:
-
-_stats_lock: Ensures accurate counting across multiple worker threads.
-
-_checkpoint_lock: Prevents file corruption during automatic progress saving.
-
-📝 License
-Distributed under the MIT License. See LICENSE for more information.
-
-👨‍💻 Author
-Saad Janina Automation & Digital Transformation
+---
+> [!TIP]
+> Ensure your `SIRET` column is formatted as text in Excel to avoid scientific notation errors!
