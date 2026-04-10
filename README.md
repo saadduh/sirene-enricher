@@ -29,7 +29,7 @@ Whether you have a list of SIRET numbers in an Excel file that needs addresses, 
 Clone the repository and install the required libraries:
 
 ```bash
-git clone [https://github.com/saadduh/sirene-enricher.git](https://github.com/saadduh/sirene-enricher.git)
+git clone https://github.com/saadduh/sirene-enricher.git
 cd sirene-enricher
 pip install requests pandas openpyxl Pillow matplotlib
 ```
